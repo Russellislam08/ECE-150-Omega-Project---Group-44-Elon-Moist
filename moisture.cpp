@@ -93,7 +93,7 @@ int readMoistureValues(){
 	/* *** Configure Port *** */
 	struct termios tty;
 	memset (&tty, 0, sizeof tty);
-    logging(20); //Adds to log file, if called
+    	logging(20); //Adds to log file, if called
 
 	/* Error Handling */
 	if ( tcgetattr ( SERIAL, &tty ) != 0 ){
@@ -107,20 +107,20 @@ int readMoistureValues(){
 	cfsetispeed (&tty, B9600);
 
 	/* Setting other Port Stuff */
-	tty.c_cflag     &=  ~PARENB;        						 // Make 8n1
+	tty.c_cflag     &=  ~PARENB;        					 // Make 8n1
 	tty.c_cflag     &=  ~CSTOPB;
 	tty.c_cflag     &=  ~CSIZE;
 	tty.c_cflag     |=  CS8;
-	tty.c_cflag     &=  ~CRTSCTS;       						 // no flow control
-	tty.c_lflag     =   0;          							 // no signaling chars, no echo, no canonical processing
-	tty.c_oflag     =   0;                  					 // no remapping, no delays
+	tty.c_cflag     &=  ~CRTSCTS;       					 // no flow control
+	tty.c_lflag     =   0;          					 // no signaling chars, no echo, no canonical processing
+	tty.c_oflag     =   0;                  				 // no remapping, no delays
 	tty.c_cc[VMIN]      =   0;                  				 // read doesn't block
 	tty.c_cc[VTIME]     =   5;                  				 // 0.5 seconds read timeout
 
-	tty.c_cflag     |=  CREAD | CLOCAL;     					 // turn on READ & ignore ctrl lines
+	tty.c_cflag     |=  CREAD | CLOCAL;     				 // turn on READ & ignore ctrl lines
 	tty.c_iflag     &=  ~(IXON | IXOFF | IXANY);				 // turn off s/w flow ctrl
-	tty.c_lflag     &=  ~(ICANON | ECHO | ECHOE | ISIG);         // make raw
-	tty.c_oflag     &=  ~OPOST;              					 // make raw
+	tty.c_lflag     &=  ~(ICANON | ECHO | ECHOE | ISIG);         		 // make raw
+	tty.c_oflag     &=  ~OPOST;              				 // make raw
 
 
 	//allocating buffer memory
