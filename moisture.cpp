@@ -45,13 +45,13 @@ void createLogFile();
 
 void logging(int errorCode);
 
+static char *getDtTm (char *buff);d 
+
 int computeStatistics(Dataset& data, Statistics& stats);
 
 void minimum (int moisture, Statistics& stats);
 
 void maximum (int moisture, Statistics& stats);
-
-int stringToInt(char line[],int position);
 
 int readMoistureFile(Dataset& data);
 
@@ -59,13 +59,9 @@ bool MoisturePlant(const Statistics& stats);
 
 void WaterPump();
 
-int timeTillDue(int timeTill, int motorRunTime);
-
 int firstWriteStats(Statistics& stats, int& ReadingCounter, int& dayCounter);
 
 int AppendWriteFile(Statistics& stats, int& ReadingCounter, int& dayCounter);
-
-int findfirstNumber(char line[], int position);
 
 //////////////////////////////////////////////////////////////
 //
@@ -93,7 +89,7 @@ int readMoistureValues(){
 	/* *** Configure Port *** */
 	struct termios tty;
 	memset (&tty, 0, sizeof tty);
-    	logging(20); //Adds to log file, if called
+    logging(20); //Adds to log file, if called
 
 	/* Error Handling */
 	if ( tcgetattr ( SERIAL, &tty ) != 0 ){
@@ -107,20 +103,20 @@ int readMoistureValues(){
 	cfsetispeed (&tty, B9600);
 
 	/* Setting other Port Stuff */
-	tty.c_cflag     &=  ~PARENB;        					 // Make 8n1
+	tty.c_cflag     &=  ~PARENB;        						 // Make 8n1
 	tty.c_cflag     &=  ~CSTOPB;
 	tty.c_cflag     &=  ~CSIZE;
 	tty.c_cflag     |=  CS8;
-	tty.c_cflag     &=  ~CRTSCTS;       					 // no flow control
-	tty.c_lflag     =   0;          					 // no signaling chars, no echo, no canonical processing
-	tty.c_oflag     =   0;                  				 // no remapping, no delays
+	tty.c_cflag     &=  ~CRTSCTS;       						 // no flow control
+	tty.c_lflag     =   0;          							 // no signaling chars, no echo, no canonical processing
+	tty.c_oflag     =   0;                  					 // no remapping, no delays
 	tty.c_cc[VMIN]      =   0;                  				 // read doesn't block
 	tty.c_cc[VTIME]     =   5;                  				 // 0.5 seconds read timeout
 
-	tty.c_cflag     |=  CREAD | CLOCAL;     				 // turn on READ & ignore ctrl lines
+	tty.c_cflag     |=  CREAD | CLOCAL;     					 // turn on READ & ignore ctrl lines
 	tty.c_iflag     &=  ~(IXON | IXOFF | IXANY);				 // turn off s/w flow ctrl
-	tty.c_lflag     &=  ~(ICANON | ECHO | ECHOE | ISIG);         		 // make raw
-	tty.c_oflag     &=  ~OPOST;              				 // make raw
+	tty.c_lflag     &=  ~(ICANON | ECHO | ECHOE | ISIG);         // make raw
+	tty.c_oflag     &=  ~OPOST;              					 // make raw
 
 
 	//allocating buffer memory
@@ -176,17 +172,6 @@ int readMoistureValues(){
 
 	return 0;
 
-}
-
-int findfirstNumber(char line[], int position){
-
-	if (line[position]>='0'&&line[position]<='9'){
-		return position;
-	}
-	else if(line[position]=='\n'){
-		return -1;
-	}
-	return findfirstNumber(line, position+1);
 }
 
 //READ DATA FROM GENERATED MOISTURE FILE
@@ -250,24 +235,6 @@ int readMoistureFile(Dataset& data){
     myfile.close();
 
     return 0;
-}
-
-//CONVERT READINGS FROM MOISTURE FILE TO INTERGERS
-int stringToInt(char line[],int position){
-    int value = 0;
-    int done = 0;
-    
-    if(line[position] == '\t'){
-        return value;
-    }
-    if(line[position] >= '0' && line[position] <= '9'){
-        while(line[position] >= '0' && line[position] <= '9'){
-            value = value * 10 + line[position] - 48;
-            ++position;
-        }
-        return value;
-    }
-    return stringToInt(line, position+1);
 }
 
 //COMPUTING THE MINIMUM
@@ -555,8 +522,6 @@ int main(const int argc, const char* const argv[]) {
 
 		Dataset data = {0};
 		Statistics stats = {0};
-
-		cout<<"LOOPING"<<endl;
       
 			//READING VALUES FROM THE MOISTURE SENSOR
 			int moistureRead = readMoistureValues();
