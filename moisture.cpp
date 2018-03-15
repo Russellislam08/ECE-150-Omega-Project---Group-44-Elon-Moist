@@ -89,7 +89,7 @@ int readMoistureValues(){
 	/* *** Configure Port *** */
 	struct termios tty;
 	memset (&tty, 0, sizeof tty);
-    logging(20); //Adds to log file, if called
+    	logging(20); //Adds to log file, if called
 
 	/* Error Handling */
 	if ( tcgetattr ( SERIAL, &tty ) != 0 ){
@@ -108,32 +108,32 @@ int readMoistureValues(){
 	tty.c_cflag     &=  ~CSIZE;
 	tty.c_cflag     |=  CS8;
 	tty.c_cflag     &=  ~CRTSCTS;       						 // no flow control
-	tty.c_lflag     =   0;          							 // no signaling chars, no echo, no canonical processing
+	tty.c_lflag     =   0;          						 // no signaling chars, no echo, no canonical processing
 	tty.c_oflag     =   0;                  					 // no remapping, no delays
-	tty.c_cc[VMIN]      =   0;                  				 // read doesn't block
-	tty.c_cc[VTIME]     =   5;                  				 // 0.5 seconds read timeout
+	tty.c_cc[VMIN]      =   0;                  				 	 // read doesn't block
+	tty.c_cc[VTIME]     =   5;                  				 	 // 0.5 seconds read timeout
 
 	tty.c_cflag     |=  CREAD | CLOCAL;     					 // turn on READ & ignore ctrl lines
-	tty.c_iflag     &=  ~(IXON | IXOFF | IXANY);				 // turn off s/w flow ctrl
-	tty.c_lflag     &=  ~(ICANON | ECHO | ECHOE | ISIG);         // make raw
+	tty.c_iflag     &=  ~(IXON | IXOFF | IXANY);				 	 // turn off s/w flow ctrl
+	tty.c_lflag     &=  ~(ICANON | ECHO | ECHOE | ISIG);         			 // make raw
 	tty.c_oflag     &=  ~OPOST;              					 // make raw
 
 
 	//allocating buffer memory
 	char buf [256];
 	memset (&buf, '\0', sizeof buf);
-    logging(21); //Adds to log file, if called
+    	logging(21); //Adds to log file, if called
 
 
 	//Creating moisture value file
 	ofstream outfile;
-    logging(22); //Adds to log file, if called
+    	logging(22); //Adds to log file, if called
 
 	outfile.open("moisture.txt");
 
 	if(!outfile.is_open()){
 		cout<< "Error: file not open" << endl;
-        logging(23); //Adds to log file, if called
+        	logging(23); //Adds to log file, if called
 		return -1;
 	}
 
@@ -145,9 +145,9 @@ int readMoistureValues(){
 
 		//error handling for flush
 		if ( tcsetattr ( SERIAL, TCSANOW, &tty ) != 0){
-        	cout << "Error " << errno << " from tcsetattr" << endl;
-            logging(24); //Adds to log file, if called
-            return -1;
+			cout << "Error " << errno << " from tcsetattr" << endl;
+			logging(24); //Adds to log file, if called
+			return -1;
 		}
 		
 		usleep(100);
@@ -157,10 +157,10 @@ int readMoistureValues(){
 
 		//Error handling for read
 		if (n < 0){
-    	    cout << "Error reading: " << strerror(errno) << endl;
-    	    int val = fcntl(SERIAL, F_GETFL, 0);
-    	    printf("file status = 0x%x\n", val);
-            return -1;
+		    cout << "Error reading: " << strerror(errno) << endl;
+		    int val = fcntl(SERIAL, F_GETFL, 0);
+		    printf("file status = 0x%x\n", val);
+		    return -1;
 		}
 
 		outfile << buf;
@@ -177,7 +177,7 @@ int readMoistureValues(){
 //READ DATA FROM GENERATED MOISTURE FILE
 int readMoistureFile(Dataset& data){
 
-	int currentLineValue = 0;
+    int currentLineValue = 0;
     fstream myfile;
     myfile.open("moisture.txt");
     
