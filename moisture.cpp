@@ -74,6 +74,7 @@ int AppendWriteFile(Statistics& stats, int& ReadingCounter, int& dayCounter);
 #define isNaN(X) (X != X)                           // NaN is the only float that is not equal to itself
 #define NaN std::numeric_limits<float>::quiet_NaN() // (comes from <limits>)
 
+// Functions
 
 int readMoistureValues(){
 
